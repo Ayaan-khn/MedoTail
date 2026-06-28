@@ -1,0 +1,473 @@
+/* ===========================================
+   MODULE 1 - GOOGLE FONT IMPORT
+   Imports the Poppins font from Google Fonts.
+=========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+
+/* ===========================================
+   MODULE 2 - CSS VARIABLES
+   Stores reusable colors, shadows, border
+   radius values and glassmorphism effects.
+=========================================== */
+:root{
+    /* Primary Colors */
+    --primary:#2563eb;
+    --primary-light:#60a5fa;
+    --success:#22c55e;
+    /* Text Colors */
+    --white:#ffffff;
+    --text-light:#d1d5db;
+    --text-muted:#94a3b8;
+    --text-soft:#cbd5e1;
+    --text-faded:#64748b;
+    /* Backgrounds */
+    --bg-dark:#08121f;
+    --bg-mid:#0f172a;
+    --bg-light:#12253f;
+    --footer-bg:#05070c;
+    /* Glass Effect */
+    --glass-bg:rgba(255,255,255,.06);
+    --glass-bg-light:rgba(255,255,255,.05);
+    --glass-border:rgba(255,255,255,.1);
+    /* Shadows */
+    --shadow-blue:0 0 20px rgba(37,99,235,.4);
+    --shadow-card:0 20px 60px rgba(0,0,0,.24);
+    /* Border Radius */
+    --radius-lg:18px;
+    --radius-md:16px;
+    --radius-sm:12px;
+    --radius-btn:14px;
+}
+
+
+
+/* ===========================================
+   MODULE 3 - GLOBAL RESET
+   Removes browser defaults and applies the
+   default font to every element.
+=========================================== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+
+
+/* ===========================================
+   MODULE 4 - BODY
+   Styles the entire webpage including
+   background gradient and default text.
+=========================================== */
+body{
+    min-height:100vh;
+    overflow-x:hidden;
+    color:var(--white);
+    background:linear-gradient(
+        135deg,
+        var(--bg-dark),
+        var(--bg-mid),
+        var(--bg-light)
+    );
+}
+
+
+
+/* ===========================================
+   MODULE 5 - ANIMATED BACKGROUND
+   Creates floating bubbles using CSS
+   animations.
+=========================================== */
+.background{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    overflow:hidden;
+}
+/* Individual Bubble */
+.bubble{
+    position:absolute;
+    bottom:-120px;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    animation:float 18s linear infinite;
+}
+/* Bubble Positions */
+.bubble1{left:8%;animation-delay:0s;}
+.bubble2{left:18%;animation-delay:4s;}
+.bubble3{left:30%;animation-delay:8s;}
+.bubble4{left:42%;animation-delay:2s;}
+.bubble5{left:60%;animation-delay:6s;}
+.bubble6{left:74%;animation-delay:10s;}
+.bubble7{left:86%;animation-delay:3s;}
+.bubble8{left:95%;animation-delay:12s;}
+/* Bubble Animation */
+@keyframes float{
+    0%{
+        transform:translateY(0) scale(.4);
+        opacity:0;
+    }
+    25%{opacity:.2;}
+    50%{opacity:.35;}
+    100%{
+        transform:translateY(-120vh) scale(1.3);
+        opacity:0;
+    }}
+
+
+
+/* ===========================================
+   MODULE 6 - MAIN LAYOUT
+   Controls the main page container width,
+   spacing and overall alignment.
+=========================================== */
+.page-shell{
+    width:min(1120px,92%);
+    margin:0 auto;
+    padding:76px 0 48px;
+}
+
+
+
+/* ===========================================
+   MODULE 7 - HERO SECTION
+   Styles the landing page header including
+   logo, title and tagline.
+=========================================== */
+.hero{
+    display:grid;
+    justify-items:center;
+    text-align:center;
+    gap:18px;
+    margin-bottom:48px;
+}
+/* Logo Container */
+.logo-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+}
+/* Logo */
+.logo{
+    width:104px;
+    aspect-ratio:1;
+    object-fit:contain;
+    filter:drop-shadow(
+        0 0 18px rgba(255,120,0,.45)
+    );
+    animation:logoIntro 1.2s ease;
+}
+/* Website Title */
+.logo-container h1{
+    font-size:clamp(46px,7vw,76px);
+    font-weight:700;
+    line-height:1;
+    text-shadow:
+        0 0 20px rgba(0,162,255,.35);
+}
+/* Tagline */
+.tagline{
+    font-size:20px;
+    color:var(--text-muted);
+}
+
+
+/* ===========================================
+   MODULE 8 - LOGO ANIMATION
+   Creates an entrance animation for the
+   website logo.
+=========================================== */
+@keyframes logoIntro{
+    0%{
+        opacity:0;
+        transform:
+            rotate(-20deg)
+            scale(.7);
+    }
+    100%{
+        opacity:1;
+        transform:
+            rotate(0deg)
+            scale(1);
+    }
+}
+
+
+
+/* ===========================================
+   MODULE 9 - BUTTONS
+   Shared button styling along with Login
+   and Signup button variations.
+=========================================== */
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:10px;
+}
+/* Shared Button Style */
+button{
+    width:200px;
+    min-height:58px;
+    border:none;
+    border-radius:var(--radius-btn);
+    cursor:pointer;
+    font-size:17px;
+    font-weight:600;
+    color:var(--white);
+    transition:
+        transform .3s,
+        box-shadow .3s,
+        border-color .3s;
+}
+/* Login Button */
+#loginBtn{
+    background:var(--primary);
+    box-shadow:var(--shadow-blue);
+}
+/* Signup Button */
+#signupBtn{
+    background:transparent;
+    border:2px solid var(--primary);
+}
+/* Hover Effect */
+button:hover{
+    transform:translateY(-4px);
+}
+
+
+/* ===========================================
+   MODULE 10 - FEATURE GRID
+   Creates the responsive two-column layout
+   for the main content.
+=========================================== */
+.feature-grid{
+    display:grid;
+    grid-template-columns:
+        minmax(0,1.45fr)
+        minmax(280px,.9fr);
+    align-items:stretch;
+    gap:24px;
+}
+
+
+/* ===========================================
+   MODULE 11 - CHAT CARD
+   Styles the AI chat preview using a
+   glassmorphism card design.
+=========================================== */
+/* Shared Card Design */
+.chat-card,
+.weather-card,
+.stat{
+    background:var(--glass-bg);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(18px);
+    box-shadow:var(--shadow-card);
+}
+/* Chat Card */
+.chat-card{
+    padding:26px;
+    border-radius:var(--radius-lg);
+}
+/* Heading */
+.chat-card h2{
+    margin-bottom:20px;
+    font-size:24px;
+}
+/* Individual Message */
+.message{
+    padding:14px 0;
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
+}
+.message:last-child{
+    border-bottom:none;
+}
+/* Username */
+.user{
+    color:var(--primary-light);
+    font-weight:700;
+}
+/* Message Text */
+.message p{
+    margin-top:5px;
+    color:var(--text-light);
+}
+/* AI Username */
+.ai .user{
+    color:var(--success);
+}
+
+
+
+/* ===========================================
+   MODULE 12 - WEATHER CARD
+   Displays the weather information in
+   a glassmorphism card.
+=========================================== */
+.weather-card{
+    padding:26px;
+    border-radius:var(--radius-lg);
+    text-align:center;
+}
+.weather-card h2{
+    margin-bottom:20px;
+    font-size:24px;
+}
+.temp{
+    margin:12px 0 4px;
+    font-size:56px;
+    font-weight:700;
+}
+.city{
+    font-size:18px;
+    font-weight:600;
+    color:var(--text-soft);
+}
+.condition{
+    margin-top:4px;
+    color:var(--text-muted);
+}
+/* Weather Info Grid */
+.weather-info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:24px;
+}
+/* Weather Box */
+.weather-info div{
+    min-height:86px;
+    display:grid;
+    align-content:center;
+    gap:4px;
+    background:var(--glass-bg-light);
+    border-radius:var(--radius-sm);
+}
+/* Value */
+.weather-info span{
+    font-size:18px;
+    font-weight:700;
+}
+/* Label */
+.weather-info p{
+    font-size:13px;
+    color:#9ca3af;
+}
+
+
+
+/* ===========================================
+   MODULE 13 - STATISTICS CARDS
+   Styles the dashboard statistics.
+=========================================== */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-top:28px;
+}
+/* Individual Card */
+.stat{
+    min-height:118px;
+    display:grid;
+    place-items:center;
+    align-content:center;
+    gap:8px;
+    text-align:center;
+    border-radius:var(--radius-md);
+}
+.stat h2{
+    color:var(--primary-light);
+}
+.stat p{
+    color:var(--text-soft);
+}
+
+
+/* ===========================================
+   MODULE 14 - FOOTER & RESPONSIVE DESIGN
+   Styles the footer and adjusts layouts for
+   tablets and mobile devices.
+=========================================== */
+/* Footer */
+.footer{
+    margin-top:52px;
+    padding:48px max(20px,8vw) 22px;
+    background:var(--footer-bg);
+    color:var(--text-faded);
+}
+/* Footer Grid */
+.footer-content{
+    width:min(1120px,100%);
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1.3fr repeat(3,1fr);
+    gap:36px;
+}
+/* Footer Section */
+.footer-section{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.footer-section h2{
+    color:var(--white);
+    font-size:30px;
+}
+.footer-section h3{
+    color:var(--primary-light);
+}
+.footer-section p,
+.footer-section a{
+    color:#a1a1aa;
+    text-decoration:none;
+}
+.footer-section a:hover{
+    color:var(--primary-light);
+}
+/* Footer Bottom */
+.footer-bottom{
+    width:min(1120px,100%);
+    margin:38px auto 0;
+    padding-top:20px;
+    text-align:center;
+    color:#777;
+    border-top:1px solid #1f2937;
+}
+/* ==========================
+   TABLET
+========================== */
+@media (max-width:900px){
+    .feature-grid,
+    .stats,
+    .footer-content{
+        grid-template-columns:1fr;
+    }
+    .page-shell{
+        padding-top:44px;
+    }
+}
+/* ==========================
+   MOBILE
+========================== */
+@media (max-width:520px){
+    .logo{
+        width:84px;
+    }
+    button{
+        width:100%;
+    }
+    .weather-info{
+        grid-template-columns:1fr;
+    }
+}
