@@ -333,10 +333,19 @@ button:hover{
     font-weight:600;
     color:var(--text-soft);
 }
-.condition{
-    margin-top:4px;
+.condition {
+    margin-top: 0;
+}
+#updated {
+    margin-top: 50px;
     color:var(--text-muted);
 }
+
+.weather-item {
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 /* Weather Info Grid */
 .weather-info{
     display:grid;
@@ -362,6 +371,9 @@ button:hover{
 .weather-info p{
     font-size:13px;
     color:#9ca3af;
+}
+.weather-item.last {
+    border-bottom: none;
 }
 
 
