@@ -12,8 +12,6 @@ const confirmPassword = document.getElementById("confirmPassword");
 
 signupForm.addEventListener("submit", (event) => {
 
-    event.preventDefault();
-
     if (
         displayName.value.trim() === "" ||
         username.value.trim() === "" ||
@@ -21,28 +19,19 @@ signupForm.addEventListener("submit", (event) => {
         password.value.trim() === "" ||
         confirmPassword.value.trim() === ""
     ) {
-
+        event.preventDefault();
         alert("Please fill in all fields.");
         return;
     }
 
     if (password.value !== confirmPassword.value) {
-
+        event.preventDefault();
         alert("Passwords do not match.");
+        confirmPassword.focus();
         return;
     }
 
-    // Backend signup will go here later
-    alert("Account created (Frontend Demo)");
-
-});
-
-const loginLink = document.getElementById("loginLink");
-
-loginLink.addEventListener("click", (event) => {
-
-    event.preventDefault();
-
-    window.location.href = "login.html";
-
+    // Validation passed.
+    // The browser will now submit the form to:
+    // POST /auth/signup
 });

@@ -5,14 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | MedoChat</title>
-    <link rel="stylesheet" href="../css/login&signup.css">
+    <link rel="stylesheet" href="../static/css/login&signup.css">
 </head>
 
 <body>
     <main class="auth-shell">
         <section class="auth-panel">
+
             <a class="brand" href="main.html">
-                <img src="../../images/logo.png" alt="MedoChat Logo">
+                <img src="../static/images/logo.png" alt="MedoChat Logo">
                 <span>MedoChat</span>
             </a>
 
@@ -21,30 +22,49 @@
 
             <div class="alerts" id="formAlerts" hidden></div>
 
-            <form method="post" action="/auth/login" data-static-redirect="chat.html">
+            <!-- Added id="loginForm" -->
+            <form id="loginForm" method="post" action="/auth/login">
+
                 <input type="hidden" name="csrf_token" value="">
 
-                <label for="username_or_email">Username or email</label>
-                <input id="username_or_email" name="username_or_email" autocomplete="username" required>
+                <label for="email">Username or email</label>
+                <input
+                    id="email"
+                    name="username_or_email"
+                    type="text"
+                    autocomplete="username"
+                    required>
 
                 <label for="password">Password</label>
-                <input id="password" name="password" type="password" autocomplete="current-password" required>
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    required>
 
                 <div class="row">
                     <label class="checkbox">
                         <input type="checkbox" name="remember">
                         Remember me
                     </label>
+
                     <a href="forgot_password.html">Forgot password?</a>
                 </div>
 
                 <button type="submit">Login</button>
+
             </form>
 
-            <p class="switch">New to MedoChat? <a href="signup.html">Create an account</a></p>
+            <p class="switch">
+                New to MedoChat?
+                <a id="signupLink" href="{{ url_for('signup_page') }}">Create an account</a>
+            </p>
+
         </section>
     </main>
-    <script src="../js/login.js"></script>
+
+    <script src="../static/js/login.js"></script>
 </body>
 
 </html>
