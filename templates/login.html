@@ -20,7 +20,11 @@
             <h1>Welcome back</h1>
             <p class="subtitle">Sign in to continue your conversations.</p>
 
-            <div class="alerts" id="formAlerts" hidden></div>
+            <div class="alerts" id="formAlerts">
+                {% if error %}
+                <p class="error-message">{{ error }}</p>
+                {% endif %}
+            </div>
 
             <!-- Added id="loginForm" -->
             <form id="loginForm" method="post" action="/auth/login">
@@ -33,6 +37,8 @@
                     name="username_or_email"
                     type="text"
                     autocomplete="username"
+                    value="{{ username_or_email if username_or_email else '' }}"
+                    class="{% if error %}input-error{% endif %}"
                     required>
 
                 <label for="password">Password</label>
@@ -41,6 +47,7 @@
                     name="password"
                     type="password"
                     autocomplete="current-password"
+                    class="{% if error %}input-error{% endif %}"
                     required>
 
                 <div class="row">

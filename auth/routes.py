@@ -18,34 +18,42 @@ auth_bp = Blueprint("auth", __name__)
 # --------------------
 # Login
 # --------------------
-
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
 
     if request.method == "POST":
 
-        username_or_email = request.form["username_or_email"]
+        username_or_email = request.form["username_or_email"].strip()
         password = request.form["password"]
 
-        # Find user using email first
+        # Try finding the user by email
         user = get_user_by_email(username_or_email)
 
         # If not found, try username
         if user is None:
             user = get_user_by_username(username_or_email)
 
-        # User doesn't exist
+        # Invalid username/email
         if user is None:
-            return "Invalid username/email."
+            return render_template(
+                "login.html",
+                error="Invalid username/email or password.",
+                username_or_email=username_or_email
+            )
 
         # Wrong password
         if not verify_password(password, user["password_hash"]):
-            return "Incorrect password."
+            return render_template(
+                "login.html",
+                error="Invalid username/email or password.",
+                username_or_email=username_or_email
+            )
 
         # Login successful
         return redirect(url_for("chat"))
 
     return render_template("login.html")
+
 
 
 # --------------------

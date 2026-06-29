@@ -160,3 +160,19 @@ button{
         flex-direction:column;
     }
 }
+
+/*!*wrong credential errors css*/
+.error-message{
+    color:#ff4d4f;
+    background:#fff1f0;
+    border:1px solid #ff4d4f;
+    border-radius:8px;
+    padding:10px;
+    margin-bottom:15px;
+    font-size:14px;
+    font-weight:500;
+}
+
+.input-error{
+    border:2px solid #ff4d4f !important;
+}
