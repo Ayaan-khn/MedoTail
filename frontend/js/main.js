@@ -27,6 +27,7 @@ const temperature = document.getElementById("temperature");
 const city = document.getElementById("city");
 const time = document.getElementById("time");
 const updated = document.getElementById("updated");
+let lastUpdated = null;
 
 function updateTime() {
     const now = new Date();
@@ -40,7 +41,45 @@ function updateTime() {
 }
 
 updateTime();
+function updateLastUpdated() {
+
+    if (!lastUpdated) return;
+
+    const now = new Date();
+    const seconds = Math.floor((now - lastUpdated) / 1000);
+
+    if (seconds <= 5) {
+        updated.textContent = "Updated just now";
+    }
+
+    else if (seconds < 60) {
+        updated.textContent = `Updated ${seconds} sec ago`;
+    }
+
+    else if (seconds < 3600) {
+
+        const minutes = Math.floor(seconds / 60);
+
+        updated.textContent = `Updated ${minutes} min${minutes > 1 ? "s" : ""} ago`;
+    }
+
+    else if (seconds < 86400) {
+
+        const hours = Math.floor(seconds / 3600);
+
+        updated.textContent = `Updated ${hours} hour${hours > 1 ? "s" : ""} ago`;
+    }
+
+    else {
+
+        const days = Math.floor(seconds / 86400);
+
+        updated.textContent = `Updated ${days} day${days > 1 ? "s" : ""} ago`;
+    }
+
+}
 setInterval(updateTime, 1000);
+setInterval(updateLastUpdated, 1000);
 
 function success(position) {
     const lat = position.coords.latitude;
@@ -52,14 +91,16 @@ function success(position) {
 
             temperature.textContent = Math.round(data.main.temp) + "°C";
             city.textContent = data.name;
-            updated.textContent = "Updated just now";
+            lastUpdated = new Date();
+            updateLastUpdated();
 
         })
         .catch(() => {
 
             temperature.textContent = "Unknown Temp";
             city.textContent = "Unknown Location";
-            updated.textContent = "Updated just now";
+            lastUpdated = new Date();
+            updateLastUpdated();
 
         });
 }
@@ -68,7 +109,8 @@ function error() {
 
     temperature.textContent = "Unknown Temp";
     city.textContent = "Unknown Location";
-    updated.textContent = "Updated just now";
+    lastUpdated = new Date();
+    updateLastUpdated();
 
 }
 
