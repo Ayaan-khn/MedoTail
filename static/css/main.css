@@ -222,7 +222,7 @@ button{
     cursor:pointer;
     font-size:17px;
     font-weight:600;
-    color:var(--white);
+    color:var(--md-orange-50);
     transition:
         transform .3s,
         box-shadow .3s,
@@ -482,4 +482,14 @@ button:hover{
     .weather-info{
         grid-template-columns:1fr;
     }
+}
+
+.btn{
+    display:inline-block;
+    text-decoration:none;
+}
+
+.logo-title{
+    text-decoration: none;
+    color: inherit;
 }

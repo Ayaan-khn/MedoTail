@@ -18,7 +18,7 @@ app.register_blueprint(auth_bp, url_prefix="/auth")
 
 @app.route("/")
 def index():
-    return render_template("login.html")
+    return render_template("main.html")
 
 
 @app.route("/signup")
@@ -30,6 +30,13 @@ def signup_page():
 def chat():
     return render_template("chat.html")
 
+@app.route("/main")
+def main_page():
+    return render_template("main.html")
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
 # --------------------
 # Start the Application
