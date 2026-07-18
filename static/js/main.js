@@ -7,13 +7,13 @@ const signupBtn = document.getElementById("signupBtn");
 
 if (loginBtn) {
     loginBtn.addEventListener("click", () => {
-        window.location.href = "login.html";
+        window.location.href = "/auth/login";
     });
 }
 
 if (signupBtn) {
     signupBtn.addEventListener("click", () => {
-        window.location.href = "signup.html";
+        window.location.href = "/signup";
     });
 }
 

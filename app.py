@@ -1,12 +1,13 @@
 from flask import Flask, render_template
 from auth.routes import auth_bp
 from database.db import init_db
+from config import SECRET_KEY
 
 # Create the Flask application
 app = Flask(__name__)
 
 # Secret key used for sessions and security
-app.config["SECRET_KEY"] = "change-this-to-a-long-random-secret-key"
+app.config["SECRET_KEY"] = SECRET_KEY
 
 # Register all authentication routes
 app.register_blueprint(auth_bp, url_prefix="/auth")

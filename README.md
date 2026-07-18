@@ -1,118 +1,78 @@
-# 💬 MedoChat
+# MedoChat
 
-**MedoChat** is a modern, AI-ready communication platform built with **Python** and **Flask**. The project is being developed incrementally with a focus on understanding full-stack development, backend architecture, authentication, real-time communication, and artificial intelligence.
+MedoChat is a Flask-based messaging platform project. It currently includes a responsive landing page, user signup/login flow, SQLite storage, static policy documents, and a Docker setup for local container builds.
 
-The objective is not only to build a messaging application but also to create a scalable platform that demonstrates practical software engineering principles.
+## Current Features
 
----
+- Flask app with Jinja2 templates
+- SQLite database with a `users` table
+- Signup and login routes
+- Werkzeug password hashing
+- Responsive landing, auth, and about pages
+- Browser-based weather preview using geolocation
+- Static PDFs for policies and guidelines
+- Dockerfile and Docker Compose support
 
-## Features
+## Planned Features
 
-### Current
+- Real chat interface
+- Flask-Login session management
+- User profiles
+- Friends system
+- Group chats
+- AI assistant
+- File sharing
+- Voice and video calling
+- Production deployment
 
-* Modern responsive landing page
-* Flask backend architecture
-* SQLite database integration
-* User authentication system (In Progress)
-* Dynamic weather integration
-* Live chat preview
-* Modular project structure
-* Clean and responsive UI
-* Jinja2 template rendering
+## Tech Stack
 
-### Planned
+- Python
+- Flask
+- SQLite
+- HTML
+- CSS
+- JavaScript
+- Docker
 
-* Real-time messaging
-* Friends system
-* Group chats
-* AI Chat Assistant
-* Custom Python Machine Learning models
-* File sharing
-* Voice & Video calling
-* End-to-End Encryption
-* Desktop & Mobile support
-* Cloud deployment
-
----
-
-# Tech Stack
-
-### Backend
-
-* Python
-* Flask
-* Flask-SocketIO
-* SQLite
-
-### Frontend
-
-* HTML5
-* CSS3
-* JavaScript
-* Jinja2
-
-### Tools
-
-* Git
-* GitHub
-* PyCharm
-
----
-
-# Project Structure
+## Project Structure
 
 ```text
-MedoChat/
-│
-├── app/
-│   ├── auth/
-│   ├── database/
-│   ├── static/
-│   │   ├── css/
-│   │   ├── images/
-│   │   ├── js/
-│   │   └── pdfs/
-│   └── templates/
-│
-├── run.py
+Medo-Chat/
+├── app.py
+├── config.py
 ├── requirements.txt
-└── README.md
+├── Dockerfile
+├── docker-compose.yml
+├── auth/
+│   ├── __init__.py
+│   ├── models.py
+│   ├── routes.py
+│   └── utils.py
+├── database/
+│   ├── __init__.py
+│   ├── db.py
+│   └── medochat.db
+├── static/
+│   ├── css/
+│   ├── images/
+│   ├── js/
+│   └── pdfs/
+└── templates/
+    ├── about.html
+    ├── chat.html
+    ├── login.html
+    ├── main.html
+    └── signup.html
 ```
 
----
+## Local Setup
 
-# Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/Ayaan-khn/MedoChat.git
-```
-
-Move into the project directory:
-
-```bash
-cd MedoChat
-```
-
-Create a virtual environment:
+Create and activate a virtual environment:
 
 ```bash
 python -m venv .venv
-```
-
-Activate it:
-
-**Windows**
-
-```bash
 .venv\Scripts\activate
-```
-
-**Linux / macOS**
-
-```bash
-source .venv/bin/activate
 ```
 
 Install dependencies:
@@ -124,65 +84,40 @@ pip install -r requirements.txt
 Run the application:
 
 ```bash
-python run.py
+python app.py
 ```
 
-Open your browser:
+Open:
 
 ```text
 http://127.0.0.1:5000
 ```
 
----
+## Docker
 
-# Development Roadmap
+Build and run with Docker Compose:
 
-* [x] Landing Page
-* [x] Responsive UI
-* [x] Weather Integration
-* [ ] Authentication
-* [ ] Password Reset
-* [ ] User Profiles
-* [ ] Friends System
-* [ ] Real-Time Chat
-* [ ] Group Chats
-* [ ] AI Integration
-* [ ] Custom Machine Learning Models
-* [ ] Voice & Video Calling
-* [ ] Notifications
-* [ ] Cloud Deployment
+```bash
+docker compose up --build
+```
 
----
+Open:
 
-# Why MedoChat?
+```text
+http://127.0.0.1:5000
+```
 
-MedoChat is a long-term learning project designed to explore:
+## Environment Variables
 
-* Full-Stack Development
-* Backend System Design
-* Authentication & Security
-* Database Management
-* Real-Time Communication
-* Artificial Intelligence
-* Machine Learning
-* Scalable Software Architecture
+Create a local `.env` file when needed:
 
----
-
-# Contributing
-
-Contributions, suggestions, and feedback are welcome. Feel free to fork the repository, submit issues, or open pull requests.
-
----
-
-# License
-
-This project is licensed under the MIT License.
-
----
+```env
+FLASK_APP=app.py
+FLASK_ENV=development
+SECRET_KEY=replace-this-with-a-long-random-secret
+DATABASE=database/medochat.db
+```
 
 ## Developer
 
-**Mike (Ayaan Khan)**
-
-Building MedoChat one version at a time with a focus on learning, scalability, and practical software engineering.
+Created by Mike.

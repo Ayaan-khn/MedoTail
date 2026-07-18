@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account | MedoChat</title>
-    <link rel="stylesheet" href="../static/css/login&signup.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login&signup.css') }}">
 </head>
 
 <body>
@@ -14,7 +14,7 @@
         <section class="auth-panel">
 
             <a class="brand" href="{{ url_for('main_page') }}">
-                <img src="../static/images/logo.png" alt="MedoChat Logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="MedoChat Logo">
                 <span>MedoChat</span>
             </a>
 
@@ -79,13 +79,13 @@
 
             <p class="switch">
                 Already have an account?
-                <a id="loginLink" href="{{ url_for('index') }}">Login</a>
+                <a id="loginLink" href="{{ url_for('auth.login') }}">Login</a>
             </p>
 
         </section>
     </main>
 
-    <script src="../static/js/signup.js"></script>
+    <script src="{{ url_for('static', filename='js/signup.js') }}"></script>
 
 </body>
 

@@ -9,7 +9,7 @@
 
     <title>About | MedoChat</title>
 
-    <link rel="stylesheet" href="../static/css/about.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
 
 </head>
 
@@ -19,7 +19,7 @@
 
         <header>
 
-            <img src="../static/images/logo.png" alt="MedoChat Logo" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="MedoChat Logo" class="logo">
 
             <h1>About MedoChat</h1>
 
@@ -152,7 +152,7 @@
 
         <div class="buttons">
 
-            <button onclick="window.location.href='main.html'">
+            <button onclick="window.location.href='{{ url_for('main_page') }}'">
 
                 Back to Home
 
@@ -162,7 +162,7 @@
 
     </div>
 
-    <script src="../static/js/about.js"></script>
+    <script src="{{ url_for('static', filename='js/about.js') }}"></script>
 
 </body>
 
