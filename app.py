@@ -3,15 +3,11 @@ from auth.routes import auth_bp
 from database.db import init_db
 from config import SECRET_KEY
 
-# Create the Flask application
 app = Flask(__name__)
 
-# Secret key used for sessions and security
 app.config["SECRET_KEY"] = SECRET_KEY
 
-# Register all authentication routes
 app.register_blueprint(auth_bp, url_prefix="/auth")
-
 
 # --------------------
 # Main Routes
@@ -31,13 +27,16 @@ def signup_page():
 def chat():
     return render_template("chat.html")
 
+
 @app.route("/main")
 def main_page():
     return render_template("main.html")
 
+
 @app.route("/about")
 def about():
     return render_template("about.html")
+
 
 # --------------------
 # Start the Application

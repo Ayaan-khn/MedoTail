@@ -2,9 +2,180 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedoChat - AI Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <!-- Google Fonts for Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1>Welcome to MedoChat</h1>
+
+    <div class="app-container">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">
+                    <img src="../static/images/logo.png" alt="MedoChat Logo" class="logo-icon">
+                    <span class="brand-name">MedoChat</span>
+                </div>
+                <button class="collapse-btn" id="collapseBtn" aria-label="Collapse Sidebar">
+                    <i class="fa-solid fa-angles-left"></i>
+                </button>
+            </div>
+
+            <button class="new-chat-btn" id="newChatBtn">
+                <i class="fa-solid fa-plus"></i> New Chat
+            </button>
+
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" placeholder="Search conversations..." class="search-input">
+            </div>
+
+            <div class="chat-history-container">
+                <div class="history-group">
+                    <h4 class="group-title">Today</h4>
+                    <ul class="history-list">
+                        <li class="history-item active"><i class="fa-regular fa-message"></i> API Integration Guide</li>
+                        <li class="history-item"><i class="fa-regular fa-message"></i> Docker Setup Help</li>
+                    </ul>
+                </div>
+                <div class="history-group">
+                    <h4 class="group-title">Yesterday</h4>
+                    <ul class="history-list">
+                        <li class="history-item"><i class="fa-regular fa-message"></i> SQL Query Optimization</li>
+                        <li class="history-item"><i class="fa-regular fa-message"></i> Resume Review 2026</li>
+                    </ul>
+                </div>
+                <div class="history-group">
+                    <h4 class="group-title">Previous 7 Days</h4>
+                    <ul class="history-list">
+                        <li class="history-item"><i class="fa-regular fa-message"></i> Python Script Generator</li>
+                        <li class="history-item"><i class="fa-regular fa-message"></i> UI/UX Feedback</li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- TOP NAVBAR -->
+            <header class="top-navbar">
+                <div class="nav-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fa-solid fa-bars"></i></button>
+                    <span class="nav-title">Medo AI</span>
+                </div>
+
+                <div class="nav-center">
+                    <div class="model-selector-wrapper">
+                        <select id="modelSelector" class="model-selector">
+                            <option value="deepseek-chat">DeepSeek Chat</option>
+                            <option value="deepseek-reasoner">DeepSeek Reasoner</option>
+                            <option value="gpt-4.1">GPT-4.1</option>
+                            <option value="claude-sonnet">Claude Sonnet</option>
+                            <option value="gemini">Gemini</option>
+                            <option value="local-llama">Local Llama</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    </div>
+                    <div class="rag-indicator"><i class="fa-solid fa-brain"></i> RAG Active</div>
+                </div>
+
+                <div class="nav-right">
+                    <button class="icon-btn" aria-label="Settings"><i class="fa-solid fa-gear"></i></button>
+                    <button class="icon-btn profile-btn" aria-label="Profile"><i class="fa-solid fa-user-circle"></i></button>
+                </div>
+            </header>
+
+            <!-- CHAT AREA -->
+            <div class="chat-area" id="chatArea">
+
+                <!-- WELCOME SCREEN -->
+                <div id="welcomeScreen" class="welcome-screen">
+                    <img src="{{ url_for('static', filename='images/medo-logo.png') }}" alt="Medo AI" class="welcome-logo">
+                    <h1>How can I help today?</h1>
+
+                    <div class="suggestion-grid">
+                        <div class="suggestion-card" onclick="startChat('Explain Docker')">
+                            <span class="suggestion-title">Explain Docker</span>
+                            <span class="suggestion-icon"><i class="fa-solid fa-cube"></i></span>
+                        </div>
+                        <div class="suggestion-card" onclick="startChat('Summarize PDF')">
+                            <span class="suggestion-title">Summarize PDF</span>
+                            <span class="suggestion-icon"><i class="fa-solid fa-file-pdf"></i></span>
+                        </div>
+                        <div class="suggestion-card" onclick="startChat('Write Python Code')">
+                            <span class="suggestion-title">Write Python Code</span>
+                            <span class="suggestion-icon"><i class="fa-solid fa-code"></i></span>
+                        </div>
+                        <div class="suggestion-card" onclick="startChat('Analyze Resume')">
+                            <span class="suggestion-title">Analyze Resume</span>
+                            <span class="suggestion-icon"><i class="fa-solid fa-address-card"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MESSAGES CONTAINER -->
+                <div id="messagesContainer" class="messages-container hidden">
+                    <!-- Messages will be injected here via JS -->
+                </div>
+
+            </div>
+
+            <!-- INPUT AREA -->
+            <div class="input-wrapper">
+                <div class="input-container">
+                    <div class="input-actions-left">
+                        <button class="action-btn" id="uploadBtn" aria-label="Upload File"><i class="fa-solid fa-paperclip"></i></button>
+                        <button class="action-btn" aria-label="Microphone"><i class="fa-solid fa-microphone"></i></button>
+                    </div>
+
+                    <textarea id="messageInput" class="message-input" placeholder="Ask Medo AI anything..." rows="1" oninput="autoResize(this)"></textarea>
+
+                    <div class="input-actions-right">
+                        <button class="action-btn stop-btn hidden" id="stopBtn" aria-label="Stop Generation"><i class="fa-solid fa-square"></i></button>
+                        <button class="send-btn" id="sendBtn" aria-label="Send Message"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+                <p class="input-footer">Medo AI can make mistakes. Consider checking important information.</p>
+            </div>
+
+        </main>
+
+        <!-- RIGHT PANEL -->
+        <aside class="right-panel" id="rightPanel">
+            <div class="panel-header">
+                <h3>Conversation Info</h3>
+                <button class="collapse-btn panel-collapse" id="collapsePanelBtn"><i class="fa-solid fa-angles-right"></i></button>
+            </div>
+
+            <div class="panel-content">
+                <div class="info-item">
+                    <span class="info-label">Selected Model</span>
+                    <span class="info-value" id="panelModel">DeepSeek Chat</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Temperature</span>
+                    <span class="info-value">0.7</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Context Used</span>
+                    <span class="info-value">3,200 tokens</span>
+                </div>
+                <div class="info-item file-list">
+                    <span class="info-label">Uploaded Docs</span>
+                    <div class="file-badge">system_requirements.pdf</div>
+                    <div class="file-badge">architecture.png</div>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 </body>
 </html>
