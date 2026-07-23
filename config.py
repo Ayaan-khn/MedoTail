@@ -4,5 +4,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-SECRET_KEY = getenv("SECRET_KEY", "change-this-secret-key")
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY", "change-me")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+
 DATABASE = getenv("DATABASE", "database/medochat.db")

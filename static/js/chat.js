@@ -1,231 +1,386 @@
 /**
  * MedoChat AI Frontend Logic
- * Handles UI interactions, message rendering, and future API streaming preparation.
+ * Clean version - Ready for Flask Backend
  */
+let currentConversationId = null;
 
-document.addEventListener('DOMContentLoaded', () => {
-    const sidebar = document.getElementById('sidebar');
-    const collapseBtn = document.getElementById('collapseBtn');
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const rightPanel = document.getElementById('rightPanel');
-    const collapsePanelBtn = document.getElementById('collapsePanelBtn');
-    const modelSelector = document.getElementById('modelSelector');
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    const messagesContainer = document.getElementById('messagesContainer');
-    const messageInput = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
-    const stopBtn = document.getElementById('stopBtn');
+document.addEventListener("DOMContentLoaded", () => {
 
-    let isStreaming = false;
-    let abortController = null;
+    // ==========================
+    // ELEMENTS
+    // ==========================
 
-    // --- UI TOGGLES ---
+    const sidebar = document.getElementById("sidebar");
+    const collapseBtn = document.getElementById("collapseBtn");
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
 
-    // Collapse/Expand Sidebar
-    collapseBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('collapsed');
+    const rightPanel = document.getElementById("rightPanel");
+    const collapsePanelBtn = document.getElementById("collapsePanelBtn");
+
+    const modelSelector = document.getElementById("modelSelector");
+    const panelModel = document.getElementById("panelModel");
+
+    const welcomeScreen = document.getElementById("welcomeScreen");
+    const messagesContainer = document.getElementById("messagesContainer");
+
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const newChatBtn = document.getElementById("newChatBtn");
+
+    // ==========================
+    // SIDEBAR
+    // ==========================
+
+    collapseBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
     });
 
-    // Mobile Menu Toggle
-    mobileMenuBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('active');
+    mobileMenuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("active");
     });
 
-    // Collapse Right Panel
-    collapsePanelBtn.addEventListener('click', () => {
-        rightPanel.classList.toggle('collapsed');
+    // ==========================
+    // RIGHT PANEL
+    // ==========================
+
+    collapsePanelBtn.addEventListener("click", () => {
+        rightPanel.classList.toggle("collapsed");
     });
 
-    // Model Selector Update
-    modelSelector.addEventListener('change', (e) => {
-        const modelName = e.target.options[e.target.selectedIndex].text;
-        document.getElementById('panelModel').innerText = modelName;
+    // ==========================
+    // MODEL SELECTOR
+    // ==========================
+
+    modelSelector.addEventListener("change", () => {
+
+        panelModel.innerText =
+            modelSelector.options[modelSelector.selectedIndex].text;
+
     });
 
-    // --- CHAT LOGIC ---
+    // ==========================
+    // AUTO RESIZE
+    // ==========================
 
-    // Auto-resize Textarea
-    window.autoResize = (element) => {
-        element.style.height = 'auto';
-        element.style.height = (element.scrollHeight) + 'px';
-        // Reset if empty
-        if(element.value === '') element.style.height = 'auto';
-    };
+    window.autoResize = function (element) {
 
-    // Handle Send
-    const handleSend = () => {
-        const text = messageInput.value.trim();
-        if (!text || isStreaming) return;
+        element.style.height = "auto";
+        element.style.height = element.scrollHeight + "px";
 
-        // Hide Welcome Screen, Show Messages
-        welcomeScreen.classList.add('hidden');
-        messagesContainer.classList.remove('hidden');
-
-        // Render User Message
-        appendMessage('user', text);
-        messageInput.value = '';
-        messageInput.style.height = 'auto';
-        sendBtn.disabled = true;
-
-        // Start AI Simulation
-        simulateAIResponse(text);
-    };
-
-    sendBtn.addEventListener('click', handleSend);
-    messageInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSend();
+        if (element.value === "") {
+            element.style.height = "auto";
         }
+
+    };
+
+    // ==========================
+    // SEND MESSAGE
+    // ==========================
+
+    function handleSend() {
+
+        const text = messageInput.value.trim();
+
+        if (!text) return;
+
+        welcomeScreen.classList.add("hidden");
+        messagesContainer.classList.remove("hidden");
+
+        appendMessage("user", text);
+
+        messageInput.value = "";
+        messageInput.style.height = "auto";
+
+        sendMessage(text);
+
+    }
+
+    sendBtn.addEventListener("click", handleSend);
+    messageInput.addEventListener("keydown", (e) => {
+
+        if (e.key === "Enter" && !e.shiftKey) {
+
+            e.preventDefault();
+
+            handleSend();
+
+        }
+
     });
 
-    // --- MESSAGE RENDERER ---
+    // ==========================
+    // BACKEND FUNCTION
+    // ==========================
+
+    async function sendMessage(message) {
+
+    sendBtn.disabled = true;
+
+    try {
+
+        const response = await fetch("/api/chat", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                message: message,
+
+                model: modelSelector.value
+
+            })
+
+        });
+
+        const data = await response.json();
+
+        appendMessage("ai", data.reply);
+
+    }
+
+    catch (error) {
+
+        appendMessage("ai", "Unable to connect to backend.");
+
+        console.error(error);
+
+    }
+
+    finally {
+
+        sendBtn.disabled = false;
+
+    }
+
+}
+    // ==========================
+    // MESSAGE RENDERER
+    // ==========================
 
     function appendMessage(role, content) {
-        const messageDiv = document.createElement('div');
+
+        const messageDiv = document.createElement("div");
+
         messageDiv.className = `message ${role}`;
 
-        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const timestamp = new Date().toLocaleTimeString([], {
 
-        let innerHtml = '';
+            hour: "2-digit",
 
-        if (role === 'user') {
-            innerHtml = `
-                <div class="message-content">${escapeHtml(content)}</div>
-                <div class="message-timestamp">${timestamp}</div>
+            minute: "2-digit"
+
+        });
+
+        let html = "";
+
+        if (role === "user") {
+
+            html = `
+
+                <div class="message-content">
+
+                    ${escapeHtml(content)}
+
+                </div>
+
+                <div class="message-timestamp">
+
+                    ${timestamp}
+
+                </div>
+
             `;
-        } else {
-            // AI Markdown Support (Basic regex parsing for visual demo)
-            const parsedContent = parseMarkdown(content);
-            innerHtml = `
-                <div class="message-content">${parsedContent}</div>
-                <div class="message-timestamp">${timestamp}</div>
-            `;
+
         }
 
-        messageDiv.innerHTML = innerHtml;
+        else {
+
+            html = `
+
+                <div class="message-content">
+
+                    ${parseMarkdown(content)}
+
+                </div>
+
+                <div class="message-timestamp">
+
+                    ${timestamp}
+
+                </div>
+
+            `;
+
+        }
+
+        messageDiv.innerHTML = html;
+
         messagesContainer.appendChild(messageDiv);
+
         scrollToBottom();
-        return messageDiv;
+
     }
 
-    function appendTypingIndicator() {
-        const indicator = document.createElement('div');
-        indicator.className = 'message ai';
-        indicator.id = 'typingIndicator';
-        indicator.innerHTML = `
-            <div class="typing-indicator">
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            </div>
-        `;
-        messagesContainer.appendChild(indicator);
-        scrollToBottom();
-    }
-
-    function removeTypingIndicator() {
-        const el = document.getElementById('typingIndicator');
-        if (el) el.remove();
-    }
-
-    // --- MOCK STREAMING LOGIC ---
-    // This is designed to mimic a streaming response.
-    // In production, you will replace this with a fetch() call to your Flask API
-    // using a ReadableStream for true streaming.
-    function simulateAIResponse(prompt) {
-        isStreaming = true;
-        sendBtn.disabled = true;
-        stopBtn.classList.remove('hidden');
-        appendTypingIndicator();
-
-        // Mock API Delay
-        setTimeout(() => {
-            removeTypingIndicator();
-
-            // Generate Mock Response based on prompt
-            let response = "I'm Medo AI, your intelligent assistant. ";
-            if (prompt.toLowerCase().includes('docker')) {
-                response += "Docker is a platform that uses OS-level virtualization to deliver software in packages called containers. It's incredibly useful for ensuring your application runs the same way in development as it does in production.";
-            } else if (prompt.toLowerCase().includes('python')) {
-                response += "Here's a quick Python function to read a CSV file using Pandas:\n\n```python\nimport pandas as pd\n\ndf = pd.read_csv('data.csv')\nprint(df.head())\n```\n\nMake sure you have pandas installed using `pip install pandas`.";
-            } else {
-                response += "That's a great question! As an AI capable of file analysis and code generation, I can assist you with that. Could you provide more specific details so I can give you the most accurate guidance possible?";
-            }
-
-            const aiMessageEl = appendMessage('ai', response);
-
-            // Simulate token streaming update effect (Just an example of how to update dynamically)
-            let count = 0;
-            const interval = setInterval(() => {
-                if(count >= 3 || !isStreaming) {
-                    clearInterval(interval);
-                    return;
-                }
-                // In a real API, you would parse the stream here and append to aiMessageEl
-                count++;
-            }, 500);
-
-            finishGeneration();
-
-        }, 1000 + Math.random() * 1000);
-    }
-
-    function finishGeneration() {
-        isStreaming = false;
-        sendBtn.disabled = false;
-        stopBtn.classList.add('hidden');
-        scrollToBottom();
-    }
-
-    // --- UTILITY FUNCTIONS ---
+    // ==========================
+    // SCROLL
+    // ==========================
 
     function scrollToBottom() {
-        const chatArea = document.querySelector('.chat-area');
-        chatArea.scrollTop = chatArea.scrollHeight;
+
+        const area = document.querySelector(".chat-area");
+
+        area.scrollTop = area.scrollHeight;
+
     }
+
+    // ==========================
+    // HTML ESCAPE
+    // ==========================
 
     function escapeHtml(text) {
+
         const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
+
+            "&": "&amp;",
+
+            "<": "&lt;",
+
+            ">": "&gt;",
+
+            "\"": "&quot;",
+
+            "'": "&#039;"
+
         };
-        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+
+        return text.replace(/[&<>"']/g, m => map[m]);
+
     }
 
-    // Basic Markdown to HTML for demo purposes
+    // ==========================
+    // MARKDOWN
+    // ==========================
+
     function parseMarkdown(text) {
-        // Code blocks
-        let formatted = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-        // Inline code
-        formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
-        // Bold
-        formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-        // Line breaks
-        formatted = formatted.replace(/\n/g, '<br>');
+
+        let formatted = text;
+
+        formatted = formatted.replace(
+
+            /```([\s\S]*?)```/g,
+
+            "<pre><code>$1</code></pre>"
+
+        );
+
+        formatted = formatted.replace(
+
+            /`([^`]+)`/g,
+
+            "<code>$1</code>"
+
+        );
+
+        formatted = formatted.replace(
+
+            /\*\*(.*?)\*\*/g,
+
+            "<strong>$1</strong>"
+
+        );
+
+        formatted = formatted.replace(
+
+            /\n/g,
+
+            "<br>"
+
+        );
+
         return formatted;
+
     }
 
-    // --- WELCOME SCREEN SUGGESTIONS ---
+    // ==========================
+    // SUGGESTION CARDS
+    // ==========================
 
-    window.startChat = (suggestion) => {
+    window.startChat = function (suggestion) {
+
         messageInput.value = suggestion;
+
         autoResize(messageInput);
+
         handleSend();
+
+    };
+});
+
+    // ==========================
+    // NEW CHAT
+    // ==========================
+
+    window.startNewChat = async function () {
+
+        try {
+
+            const response = await fetch("/api/new_chat", {
+                method: "POST"
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error(data.error);
+                return;
+            }
+
+            currentConversationId = data.conversation_id;
+
+            console.log("Conversation Created:", currentConversationId);
+
+            // Reset UI
+            messagesContainer.innerHTML = "";
+
+            messagesContainer.classList.add("hidden");
+            welcomeScreen.classList.remove("hidden");
+
+            messageInput.value = "";
+            messageInput.style.height = "auto";
+            messageInput.focus();
+
+        }
+
+        catch (error) {
+
+            console.error("Unable to create conversation.", error);
+
+        }
+
     };
 
-    // --- STOP GENERATION ---
-    stopBtn.addEventListener('click', () => {
-        if (abortController) {
-            abortController.abort();
-            abortController = null;
-        }
-        isStreaming = false;
-        removeTypingIndicator();
-        finishGeneration();
+    // ==========================
+    // BUTTON EVENTS
+    // ==========================
+
+    newChatBtn.addEventListener("click", () => {
+        window.startNewChat();
     });
 
-});
+    // ==========================
+    // SUGGESTION CARDS
+    // ==========================
+
+    window.startChat = function (suggestion) {
+
+        messageInput.value = suggestion;
+
+        autoResize(messageInput);
+
+        handleSend();
+
+    };

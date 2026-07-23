@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 
 from auth.models import (
     create_user,
@@ -49,17 +49,21 @@ def login():
                 username_or_email=username_or_email
             )
 
-        # Login successful
+        # --------------------
+        # Login Successful
+        # --------------------
+        session["user_id"] = user["id"]
+        session["display_name"] = user["display_name"]
+        session["username"] = user["username"]
+
         return redirect(url_for("chat"))
 
     return render_template("login.html")
 
 
-
 # --------------------
 # Signup
 # --------------------
-
 @auth_bp.route("/signup", methods=["GET", "POST"])
 def signup():
 
@@ -72,11 +76,17 @@ def signup():
 
         # Username already exists
         if get_user_by_username(username):
-            return "Username already exists."
+            return render_template(
+                "signup.html",
+                error="Username already exists."
+            )
 
         # Email already exists
         if get_user_by_email(email):
-            return "Email already exists."
+            return render_template(
+                "signup.html",
+                error="Email already exists."
+            )
 
         # Hash password
         password_hash = hash_password(password)
@@ -89,6 +99,17 @@ def signup():
             password_hash
         )
 
-        return redirect(url_for("index"))
+        return redirect(url_for("auth.login"))
 
     return render_template("signup.html")
+
+
+# --------------------
+# Logout
+# --------------------
+@auth_bp.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect(url_for("index"))
